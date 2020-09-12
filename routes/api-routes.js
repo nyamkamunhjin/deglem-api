@@ -19,14 +19,14 @@ router.post('/add', async (req, res) => {
 });
 
 // read
-router.get('/foods/', async (req, res) => {
-  try {
-    const foods = await Food.find({});
-    res.status(200).json(foods);
-  } catch (err) {
-    throw err;
-  }
-});
+// router.get('/foods/', async (req, res) => {
+//   try {
+//     const foods = await Food.find({});
+//     res.status(200).json(foods);
+//   } catch (err) {
+//     throw err;
+//   }
+// });
 
 // read by barcode
 router.get('/foods/:barcode', async (req, res) => {
