@@ -32,26 +32,27 @@ mongoose
 const { testUser, testDiary } = require('./db-test');
 const User = require('./models/userSchema');
 const userSchema = require('./models/userSchema');
+const { Diary } = require('./models/diarySchema');
 // testUser.save()
-testDiary.save((err, doc) => {
-  // save diary id to user daily log
-  if (err) console.log(err);
-  else {
-    console.log(doc.user_id);
-    userSchema.findOneAndUpdate(
-      { _id: doc.user_id },
-      { $push: { dailyLog: doc._id } },
-      { new: true },
-      (err, doc) => {
-        if (err) console.log(err);
-        else {
-          console.log('Document successful created and linked with user');
-          console.log(doc);
-        }
-      }
-    );
-  }
-});
+// testDiary.save((err, doc) => {
+//   // save diary id to user daily log
+//   if (err) console.log(err);
+//   else {
+//     console.log(doc.user_id);
+//     userSchema.findOneAndUpdate(
+//       { _id: doc.user_id },
+//       { $push: { dailyLog: doc._id } },
+//       { new: true },
+//       (err, doc) => {
+//         if (err) console.log(err);
+//         else {
+//           console.log('Document successful created and linked with user');
+//           console.log(doc);
+//         }
+//       }
+//     );
+//   }
+// });
 
 // User.findByIdAndUpdate(
 //   { _id: '5f604a4277de91086fd50b63' },
@@ -74,3 +75,31 @@ testDiary.save((err, doc) => {
 //     console.log(doc);
 //   }
 // );
+// Diary.findOneAndUpdate(
+//   { _id: '5f60875bfa98a910d541160a' },
+//   {
+//     $push: {
+//       breakfast: {
+//         serving: 5,
+//         food: '5f6082d1467bac0f6bd69686',
+//       },
+//     },
+//   },
+//   { new: true, upsert: true },
+//   (err, doc) => {
+//     if(err) console.log(err)
+//     else {
+//       console.log('doc successfully updated')
+//     }
+//   }
+// );
+User.findOne({ _id: '5f607f85a586e00e416f2124' })
+  .populate({ path: 'dailyLog', populate: {
+    path: 'breakfast'
+  } })
+  .exec((err, doc) => {
+    if (err) console.log(err);
+    else {
+      console.log(doc.dailyLog[0]);
+    }
+  });

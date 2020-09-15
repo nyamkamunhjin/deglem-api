@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./userSchema');
 const Schema = mongoose.Schema;
 
 const singleFoodType = {
@@ -26,12 +27,23 @@ const diarySchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+    validate: {
+      validator: (value) =>
+        User.findOne({ _id: value }, (err, doc) => {
+          if (err || !doc) return false;
+          else return true;
+        }),
+      message: (props) => `${props.value} is not value`,
+    },
   },
   breakfast: [singleFoodType],
   lunch: [singleFoodType],
   dinner: [singleFoodType],
   snacks: [singleFoodType],
 });
+
+// validate user with user_id actually exists
+
 
 module.exports = {
   Diary: mongoose.model('Diary', diarySchema),

@@ -31,7 +31,7 @@ const testUser = new User({
 
 const testDiary = new Diary({
   date: formatDate(new Date()),
-  user_id: Types.ObjectId('5f606e2537a9d80cbf597545'),
+  user_id: Types.ObjectId('5f607f85a586e00e416f2124'),
   breakfast: [
     {
       serving: 3,
