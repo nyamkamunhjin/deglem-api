@@ -28,3 +28,33 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
+
+// const csv = require('csv-parser');
+// const fs = require('fs');
+// const Food = require('./models/foodSchema');
+
+// const results = [];
+
+// fs.createReadStream('./data.csv')
+//   .pipe(csv())
+//   .on('data', (data) => results.push(data))
+//   .on('end', () => {
+//     console.log(results);
+
+//     const query = results.map(data => {
+//       return {
+//         ...data,
+//         serving: {
+//           size: 100,
+//           unit: 'gram',
+//           servingPerContainer: 1
+//         }
+//       }
+//     })
+
+//     Food.insertMany(query);
+//     // [
+//     //   { NAME: 'Daffy Duck', AGE: '24' },
+//     //   { NAME: 'Bugs Bunny', AGE: '22' }
+//     // ]
+//   });
