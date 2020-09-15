@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   userInfo: {
     username: {
       type: Schema.Types.String,
@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
     password: {
       type: Schema.Types.String,
       required: true,
+    },
+    avatar: {
+      type: Schema.Types.String,
     },
     email: {
       type: Schema.Types.String,
@@ -72,12 +75,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
-  dailyLog: {
-    breakfast: [Schema.Types.ObjectId],
-    lunch: [Schema.Types.ObjectId],
-    dinner: [Schema.Types.ObjectId],
-
-  },
+  dailyLog: [{ type: Schema.Types.ObjectId, ref: 'Diary'}],
 });
 
 module.exports = mongoose.model('User', userSchema);

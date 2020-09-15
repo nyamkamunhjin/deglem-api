@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const Food = require('../models/foodSchema');
 
-router.get('/', (req, res) => {
-  res.status(200).send('hello from api');
-});
+// router.get('/', (req, res) => {
+//   res.status(200).send('hello from api');
+// });
 
 // create
 router.post('/add', async (req, res) => {
@@ -19,7 +19,7 @@ router.post('/add', async (req, res) => {
 });
 
 // read
-router.get('/foods/', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const foods = await Food.find({});
     res.status(200).json(foods);
@@ -29,7 +29,7 @@ router.get('/foods/', async (req, res) => {
 });
 
 // read by barcode
-router.get('/foods/:barcode', async (req, res) => {
+router.get('/:barcode', async (req, res) => {
   try {
     const { barcode } = req.params;
     const food = await Food.findOne({ barcode }).exec();

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const foodSchema = new mongoose.Schema({
+const foodSchema = new Schema({
   barcode: {
     type: Schema.Types.Number
   },

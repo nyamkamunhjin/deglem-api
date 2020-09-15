@@ -3,13 +3,13 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
-const apiRouter = require('./routes/api-routes');
+const apiRouter = require('./routes/api-foods');
 
 require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
-app.use('/api', apiRouter);
+app.use('/api/foods', apiRouter);
 
 app.get('/', (req, res) => {
   res.json({ message: 'hello from deglem' });
@@ -28,3 +28,49 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
+
+const { testUser, testDiary } = require('./db-test');
+const User = require('./models/userSchema');
+const userSchema = require('./models/userSchema');
+// testUser.save()
+testDiary.save((err, doc) => {
+  // save diary id to user daily log
+  if (err) console.log(err);
+  else {
+    console.log(doc.user_id);
+    userSchema.findOneAndUpdate(
+      { _id: doc.user_id },
+      { $push: { dailyLog: doc._id } },
+      { new: true },
+      (err, doc) => {
+        if (err) console.log(err);
+        else {
+          console.log('Document successful created and linked with user');
+          console.log(doc);
+        }
+      }
+    );
+  }
+});
+
+// User.findByIdAndUpdate(
+//   { _id: '5f604a4277de91086fd50b63' },
+//   { $push: { dailyLog: testDiary } },
+//   { new: true},
+//   (err, doc) => {
+//     if(err) console.log('Error updating user dailylog')
+//     console.log(doc)
+//   }
+// );
+// User.findByIdAndUpdate(
+//   { _id: '5f604a4277de91086fd50b63', 'dailyLog.id': 0 },
+//   { $push: { 'dailyLog.$.breakfast': {
+//     serving: 3,
+//     food: mongoose.Types.ObjectId('5f363641127c0f0f3799990a')
+//   } } },
+//   { new: true },
+//   (err, doc) => {
+//     if (err) console.log('Error updating user dailylog', err);
+//     console.log(doc);
+//   }
+// );
