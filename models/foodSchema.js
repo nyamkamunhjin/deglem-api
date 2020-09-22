@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const foodSchema = new Schema({
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   barcode: {
     type: Schema.Types.Number
   },

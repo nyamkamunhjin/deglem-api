@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Food = require('../models/foodSchema');
+const Food = require('../../models/foodSchema');
 
 // router.get('/', (req, res) => {
 //   res.status(200).send('hello from api');

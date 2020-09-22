@@ -3,14 +3,15 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
-const apiRouter = require('./routes/api-foods');
+const foodsRouter = require('./routes/foods/api-foods');
+const usersRouter = require('./routes/users/api-users');
 
 require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
-app.use('/api/foods', apiRouter);
-
+app.use('/api/foods', foodsRouter);
+app.use('/api/users', usersRouter)
 app.get('/', (req, res) => {
   res.json({ message: 'hello from deglem' });
 });
@@ -23,7 +24,7 @@ mongoose
   )
   .then(() => {
     console.log('Connected to Mongo Atlas');
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT, '',() => {
       console.log('Listening on port:', process.env.PORT);
     });
   })
@@ -34,6 +35,8 @@ const User = require('./models/userSchema');
 const userSchema = require('./models/userSchema');
 const { Diary } = require('./models/diarySchema');
 // testUser.save()
+
+// save new diary link with user
 // testDiary.save((err, doc) => {
 //   // save diary id to user daily log
 //   if (err) console.log(err);
@@ -54,15 +57,18 @@ const { Diary } = require('./models/diarySchema');
 //   }
 // });
 
+// // what is this
 // User.findByIdAndUpdate(
-//   { _id: '5f604a4277de91086fd50b63' },
+//   { _id: '5f607f85a586e00e416f2124' },
 //   { $push: { dailyLog: testDiary } },
-//   { new: true},
+//   { new: true },
 //   (err, doc) => {
-//     if(err) console.log('Error updating user dailylog')
-//     console.log(doc)
+//     if (err) console.log('Error updating user dailylog');
+//     console.log(doc);
 //   }
 // );
+
+// // no idea
 // User.findByIdAndUpdate(
 //   { _id: '5f604a4277de91086fd50b63', 'dailyLog.id': 0 },
 //   { $push: { 'dailyLog.$.breakfast': {
@@ -75,6 +81,8 @@ const { Diary } = require('./models/diarySchema');
 //     console.log(doc);
 //   }
 // );
+
+// // find diary by id and add new food with serving
 // Diary.findOneAndUpdate(
 //   { _id: '5f60875bfa98a910d541160a' },
 //   {
@@ -93,13 +101,23 @@ const { Diary } = require('./models/diarySchema');
 //     }
 //   }
 // );
-User.findOne({ _id: '5f607f85a586e00e416f2124' })
-  .populate({ path: 'dailyLog', populate: {
-    path: 'breakfast'
-  } })
-  .exec((err, doc) => {
-    if (err) console.log(err);
-    else {
-      console.log(doc.dailyLog[0]);
-    }
-  });
+
+// // find user by id and populate daily log
+// User.findOne({ _id: '5f607f85a586e00e416f2124' })
+//   .populate({
+//     path: 'dailyLog',
+//     populate: {
+//       path: 'breakfast',
+//       populate: {
+//         path: 'food',
+//         model: 'Food',
+//       },
+//     },
+//   })
+//   .exec((err, doc) => {
+//     if (err) console.log(err);
+//     else {
+//       // console.log(JSON.stringify(doc.dailyLog));
+//       console.log(doc);
+//     }
+//   });
