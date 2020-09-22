@@ -11,7 +11,7 @@ require('dotenv').config();
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use('/api/foods', foodsRouter);
-app.use('/api/users', usersRouter)
+app.use('/api/users', usersRouter);
 app.get('/', (req, res) => {
   res.json({ message: 'hello from deglem' });
 });
@@ -24,7 +24,7 @@ mongoose
   )
   .then(() => {
     console.log('Connected to Mongo Atlas');
-    app.listen(process.env.PORT, '',() => {
+    app.listen(process.env.PORT, '', () => {
       console.log('Listening on port:', process.env.PORT);
     });
   })
@@ -103,21 +103,51 @@ const { Diary } = require('./models/diarySchema');
 // );
 
 // // find user by id and populate daily log
-// User.findOne({ _id: '5f607f85a586e00e416f2124' })
-//   .populate({
-//     path: 'dailyLog',
-//     populate: {
-//       path: 'breakfast',
-//       populate: {
-//         path: 'food',
-//         model: 'Food',
-//       },
-//     },
-//   })
-//   .exec((err, doc) => {
-//     if (err) console.log(err);
-//     else {
-//       // console.log(JSON.stringify(doc.dailyLog));
-//       console.log(doc);
-//     }
-//   });
+User.findOne({ _id: '5f607f85a586e00e416f2124' })
+  .populate({
+    path: 'dailyLog',
+    populate: {
+      path: 'breakfast',
+      populate: {
+        path: 'food',
+        model: 'Food',
+      },
+    },
+  })
+  .populate({
+    path: 'dailyLog',
+    populate: {
+      path: 'lunch',
+      populate: {
+        path: 'food',
+        model: 'Food',
+      },
+    },
+  })
+  .populate({
+    path: 'dailyLog',
+    populate: {
+      path: 'dinner',
+      populate: {
+        path: 'food',
+        model: 'Food',
+      },
+    },
+  })
+  .populate({
+    path: 'dailyLog',
+    populate: {
+      path: 'snacks',
+      populate: {
+        path: 'food',
+        model: 'Food',
+      },
+    },
+  })
+  .exec((err, doc) => {
+    if (err) console.log(err);
+    else {
+      // console.log(JSON.stringify(doc.dailyLog));
+      console.log(doc.dailyLog);
+    }
+  });
