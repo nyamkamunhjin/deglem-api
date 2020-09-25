@@ -34,7 +34,10 @@ const diarySchema = new Schema({
       validator: (value) =>
         User.findOne({ _id: value }, (err, doc) => {
           if (err || !doc) return false;
-          else return true;
+          else {
+            console.log(doc);
+            return true;
+          }
         }),
       message: (props) => `${props.value} is not value`,
     },
@@ -43,6 +46,22 @@ const diarySchema = new Schema({
   lunch: [singleFoodTypeSchema],
   dinner: [singleFoodTypeSchema],
   snacks: [singleFoodTypeSchema],
+});
+
+diarySchema.post('findOneAndUpdate', async (doc) => {
+  // console.log('post findOneAndUpdate hook: ', doc);
+  const user = await User.findById({ _id: doc.user_id });
+  if (!user.dailyLog.includes(doc._id)) {
+    user.dailyLog.push(doc._id);
+    user.save((err, doc) => {
+      if (err || !doc) console.log(err);
+      else {
+        console.log('linked diary doc to user.');
+      }
+    });
+  } else {
+    console.log('user already linked.');
+  }
 });
 
 // validate user with user_id actually exists

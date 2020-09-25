@@ -1,4 +1,8 @@
 const router = require('express').Router();
+const { Types } = require('mongoose');
+const { formatDate } = require('../../functions/functions');
+const { Diary } = require('../../models/diarySchema');
+const userSchema = require('../../models/userSchema');
 const User = require('../../models/userSchema');
 
 router.get('/', (req, res) => {
@@ -8,58 +12,94 @@ router.get('/', (req, res) => {
 router.get('/dailylog', async (req, res) => {
   try {
     const { id } = req.query;
-    
+
     // check if id is null
     if (!id) throw new Error('id query is null');
 
     // find user by id and populate daily log
-    const user = await User.findOne({ _id: '5f607f85a586e00e416f2124' })
-    .populate({
-      path: 'dailyLog',
-      populate: {
-        path: 'breakfast',
+    const user = await User.findOne({ _id: id })
+      .populate({
+        path: 'dailyLog',
         populate: {
-          path: 'food',
-          model: 'Food',
+          path: 'breakfast',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
         },
-      },
-    })
-    .populate({
-      path: 'dailyLog',
-      populate: {
-        path: 'lunch',
+      })
+      .populate({
+        path: 'dailyLog',
         populate: {
-          path: 'food',
-          model: 'Food',
+          path: 'lunch',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
         },
-      },
-    })
-    .populate({
-      path: 'dailyLog',
-      populate: {
-        path: 'dinner',
+      })
+      .populate({
+        path: 'dailyLog',
         populate: {
-          path: 'food',
-          model: 'Food',
+          path: 'dinner',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
         },
-      },
-    })
-    .populate({
-      path: 'dailyLog',
-      populate: {
-        path: 'snacks',
+      })
+      .populate({
+        path: 'dailyLog',
         populate: {
-          path: 'food',
-          model: 'Food',
+          path: 'snacks',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
         },
-      },
-    })
+      })
       .exec();
     if (user.dailyLog !== undefined) res.status(200).json(user.dailyLog);
+    console.log(user);
     // send error
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
+router.post('/dailylog/add', async (req, res) => {
+  /* 
+  1. find user by id 
+  2. check if the day's diary exists else create new diary 
+  3. add the food to a diary by id
+  */
+  try {
+    console.log({ user_id: req.body.user_id });
+
+    Diary.findOneAndUpdate(
+      {
+        user_id: req.body.user_id,
+        date: req.body.diary.date,
+      },
+      {
+        date: req.body.diary.date,
+        user_id: req.body.user_id,
+        $push: req.body.diary.push,
+      },
+      { new: true, upsert: true },
+      (err, doc) => {
+        if (err || !doc) console.log(err);
+        else {
+          console.log('doc successfully updated');
+          res
+            .status(200)
+            .json({ success: true, message: 'doc successfully updated.' });
+        }
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 module.exports = router;
