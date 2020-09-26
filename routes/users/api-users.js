@@ -111,6 +111,7 @@ router.post('/dailylog/food/add', async (req, res) => {
 router.put('/dailylog/food/update', async (req, res) => {
   /*
   UPDATE FOOD SERVING 
+  TEST
   */
   try {
     console.log(req.body);
