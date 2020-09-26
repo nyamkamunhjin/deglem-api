@@ -2,27 +2,17 @@ const mongoose = require('mongoose');
 const User = require('./userSchema');
 const Schema = mongoose.Schema;
 
-const singleFoodTypeSchema = Schema(
-  {
-    serving: {
-      type: Schema.Types.Number,
-      required: true,
-    },
-    food: {
-      type: Schema.Types.ObjectId,
-      ref: 'Food',
-      required: true,
-    },
+const singleFoodTypeSchema = new Schema({
+  serving: {
+    type: Schema.Types.Number,
+    required: true,
   },
-  { _id: false }
-);
-// const diarySchema = new Schema({
-//   diaryDate: [Schema.Types.Date],
-//   breakfast: [{type:Schema.Types.ObjectId, ref: 'FoodLog'}],
-//   lunch: [{type:Schema.Types.ObjectId, ref: 'FoodLog'}],
-//   dinner: [{type:Schema.Types.ObjectId, ref: 'FoodLog'}],
-//   snacks: [{type:Schema.Types.ObjectId, ref: 'FoodLog'}]
-// })
+  food: {
+    type: Schema.Types.ObjectId,
+    ref: 'Food',
+    required: true,
+  },
+});
 
 const diarySchema = new Schema({
   date: Schema.Types.String,
@@ -31,6 +21,7 @@ const diarySchema = new Schema({
     ref: 'User',
     required: true,
     validate: {
+      // validate user with user_id actually exists
       validator: (value) =>
         User.findOne({ _id: value }, (err, doc) => {
           if (err || !doc) return false;
@@ -64,9 +55,24 @@ diarySchema.post('findOneAndUpdate', async (doc) => {
   }
 });
 
-// validate user with user_id actually exists
+diarySchema.post('findOneAndDelete', async (doc) => {
+  console.log('post findOneAndDelete hook: ', doc);
+  // const user = await User.findById({ _id: doc.user_id });
+  // if (!user.dailyLog.includes(doc._id)) {
+  //   user.dailyLog.push(doc._id);
+  //   user.save((err, doc) => {
+  //     if (err || !doc) console.log(err);
+  //     else {
+  //       console.log('linked diary doc to user.');
+  //     }
+  //   });
+  // } else {
+  //   console.log('user already linked.');
+  // }
+});
 
 module.exports = {
   Diary: mongoose.model('Diary', diarySchema),
+  SingleFood: mongoose.model('SingleFood', singleFoodTypeSchema),
   diarySchema,
 };
