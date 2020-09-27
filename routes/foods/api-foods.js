@@ -19,19 +19,19 @@ router.post('/add', async (req, res) => {
 });
 
 // read
-router.get('/', async (req, res) => {
-  try {
-    const foods = await Food.find({});
-    res.status(200).json(foods);
-  } catch (err) {
-    throw err;
-  }
-});
+// router.get('/', async (req, res) => {
+//   try {
+//     const foods = await Food.find({});
+//     res.status(200).json(foods);
+//   } catch (err) {
+//     throw err;
+//   }
+// });
 
 // read by barcode
-router.get('/:barcode', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const { barcode } = req.params;
+    const { barcode } = req.query;
     const food = await Food.findOne({ barcode }).exec();
     if (food === null) throw new Error('product not found');
     res.status(200).json(food);
@@ -58,4 +58,35 @@ router.put('/update/:barcode', async (req, res) => {
   }
 });
 
+// searching foods
+router.get('/search', async (req, res) => {
+  try {
+    const { query } = req.query;
+    const limit = parseInt(req.query.limit, 10);
+
+    const search = await Food.aggregate()
+      .search({
+        regex: {
+          query: `${query}.*`,
+          path: 'name',
+          allowAnalyzedField: true,
+        },
+      })
+      .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
+      .sort({ name_length: 1 })
+      .project({ name_length: 0 })
+      .limit(limit);
+    console.log(search);
+
+    // const search = await Food.find({
+    //   name: new RegExp(`^${query}`, 'i'),
+
+    // })
+
+    res.status(200).json(search);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+    console.log(err);
+  }
+});
 module.exports = router;
