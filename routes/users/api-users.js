@@ -1,9 +1,6 @@
 const router = require('express').Router();
-const { Types } = require('mongoose');
-const { formatDate } = require('../../functions/functions');
-const { Diary, SingleFood } = require('../../models/diarySchema');
-const userSchema = require('../../models/userSchema');
-const User = require('../../models/userSchema');
+const moment = require('moment');
+const { Diary } = require('../../models/diarySchema');
 
 router.get('/', (req, res) => {
   res.send('hello from users');
@@ -15,59 +12,54 @@ router.get('/dailylog', async (req, res) => {
 
   */
   try {
-    const { id } = req.query;
-
+    const { user_id, date } = req.query;
+    const range = parseInt(req.query.range, 10);
+    console.log(req.query);
     // check if id is null
-    if (!id) throw new Error('id query is null');
+    if (!user_id) throw new Error('id query is null');
 
-    // find user by id and populate daily log
-    const user = await User.findOne({ _id: id })
+    const diaries = await Diary.find({
+      user_id,
+      date: {
+        $gte: moment(new Date(date)).add(-range, 'days').format('YYYY-MM-DD'),
+        $lt: moment(new Date(date)).add(range, 'days').format('YYYY-MM-DD'),
+      },
+    })
       .populate({
-        path: 'dailyLog',
+        path: 'breakfast',
         populate: {
-          path: 'breakfast',
-          populate: {
-            path: 'food',
-            model: 'Food',
-          },
+          path: 'food',
+          model: 'Food',
         },
       })
       .populate({
-        path: 'dailyLog',
+        path: 'lunch',
         populate: {
-          path: 'lunch',
-          populate: {
-            path: 'food',
-            model: 'Food',
-          },
+          path: 'food',
+          model: 'Food',
         },
       })
       .populate({
-        path: 'dailyLog',
+        path: 'dinner',
         populate: {
-          path: 'dinner',
-          populate: {
-            path: 'food',
-            model: 'Food',
-          },
+          path: 'food',
+          model: 'Food',
         },
       })
       .populate({
-        path: 'dailyLog',
+        path: 'snacks',
         populate: {
-          path: 'snacks',
-          populate: {
-            path: 'food',
-            model: 'Food',
-          },
+          path: 'food',
+          model: 'Food',
         },
       })
       .exec();
-    if (user.dailyLog !== undefined) res.status(200).json(user.dailyLog);
-    console.log(user);
+
+    if (diaries !== undefined) res.status(200).json(diaries);
     // send error
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
+    // throw err;
   }
 });
 
@@ -111,7 +103,6 @@ router.post('/dailylog/food/add', async (req, res) => {
 router.put('/dailylog/food/update', async (req, res) => {
   /*
   UPDATE FOOD SERVING 
-  TEST
   */
   try {
     console.log(req.body);
@@ -124,7 +115,6 @@ router.put('/dailylog/food/update', async (req, res) => {
       (err, doc) => {
         if (err || !doc) console.log(err);
         else {
-          console.log(doc);
           res.status(200).json({
             success: true,
             message: 'diary food successfully updated.',

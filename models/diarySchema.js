@@ -15,7 +15,7 @@ const singleFoodTypeSchema = new Schema({
 });
 
 const diarySchema = new Schema({
-  date: Schema.Types.String,
+  date: Schema.Types.Date,
   user_id: {
     type: Schema.Types.ObjectId,
     ref: 'User',
