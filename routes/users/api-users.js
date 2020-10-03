@@ -133,9 +133,23 @@ router.delete('/dailylog/food/delete', async (req, res) => {
   REMOVE LOGGED FOOD 
   */
   try {
-    Diary.updateOne(
+    const { name, _id } = req.query;
+    console.log(req.query);
+
+    let filter = {};
+    let data = {};
+
+    filter[`${name.toLowerCase()}._id`] = _id;
+    data[name.toLowerCase()] = {
+      _id: _id,
+    };
+
+    console.log(data);
+
+    Diary.update(
+      filter,
       {
-        $pull: req.body.pull,
+        $pull: data,
       },
       (err, doc) => {
         if (err || !doc) console.log(err);
