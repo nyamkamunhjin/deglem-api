@@ -42,40 +42,40 @@ const userSchema = new Schema({
   goalInfo: {
     currentWeight: {
       type: Schema.Types.Number,
-      required: true,
+      // required: true,
     },
     goalWeight: {
       type: Schema.Types.Number,
-      required: true,
+      // required: true,
     },
     weeklyGoal: {
       type: Schema.Types.Number,
-      required: true,
+      // required: true,
     },
     activityLevel: {
       type: Schema.Types.Number,
-      required: true,
+      // required: true,
     },
     nutritionGoals: {
       calories: {
         type: Schema.Types.Number,
-        required: true,
+        // required: true,
       },
       carbohydrates: {
         type: Schema.Types.Number,
-        required: true,
+        // required: true,
       },
       protein: {
         type: Schema.Types.Number,
-        required: true,
+        // required: true,
       },
       fat: {
         type: Schema.Types.Number,
-        required: true,
+        // required: true,
       },
     },
   },
-  dailyLog: [{ type: Schema.Types.ObjectId, ref: 'Diary'}],
+  dailyLog: [{ type: Schema.Types.ObjectId, ref: 'Diary' }],
 });
 
 module.exports = mongoose.model('User', userSchema);

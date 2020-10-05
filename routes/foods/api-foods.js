@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const passport = require('passport');
 const Food = require('../../models/foodSchema');
 
 // router.get('/', (req, res) => {
@@ -6,17 +7,33 @@ const Food = require('../../models/foodSchema');
 // });
 
 // create
-router.post('/add', async (req, res) => {
-  try {
-    const food = new Food(req.body);
-    await food.save();
+router.post(
+  '/add',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const food = new Food({
+        ...req.body,
+        creator: req.user._id,
+      });
 
-    res.status(200).json(food);
-  } catch (err) {
-    res.status(409).json(err);
-    throw err;
+      const err = await food.validate();
+      if (err) {
+        console.error(err);
+        throw new Error('food validation failed.');
+      } else {
+        food.save();
+        res
+          .status(200)
+          .json({ success: true, message: 'food added to database.' });
+      }
+    } catch (err) {
+      res.status(409).json({ success: false, message: err.message });
+
+      throw err;
+    }
   }
-});
+);
 
 // read
 // router.get('/', async (req, res) => {
@@ -29,64 +46,77 @@ router.post('/add', async (req, res) => {
 // });
 
 // read by barcode
-router.get('/', async (req, res) => {
-  try {
-    const { barcode } = req.query;
-    const food = await Food.findOne({ barcode }).exec();
-    if (food === null) throw new Error('product not found');
-    res.status(200).json(food);
-  } catch (err) {
-    res.status(409).json({ message: err.message });
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { barcode } = req.query;
+      const food = await Food.findOne({ barcode }).exec();
+      if (food === null) throw new Error('product not found');
+      res.status(200).json(food);
+    } catch (err) {
+      res.status(409).json({ message: err.message });
 
-    throw err;
+      throw err;
+    }
   }
-});
+);
 
-router.put('/update/:barcode', async (req, res) => {
-  try {
-    const { barcode } = req.params;
+router.put(
+  '/update/:barcode',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { barcode } = req.params;
 
-    const food = await Food.findOneAndUpdate({ barcode }, req.body, {
-      new: true,
-    });
+      const food = await Food.findOneAndUpdate({ barcode }, req.body, {
+        new: true,
+      });
 
-    res.status(200).json(food);
-  } catch (err) {
-    res.status(409).json({ message: err.message });
+      res.status(200).json(food);
+    } catch (err) {
+      res.status(409).json({ message: err.message });
 
-    throw err;
+      throw err;
+    }
   }
-});
+);
 
 // searching foods
-router.get('/search', async (req, res) => {
-  try {
-    const { query } = req.query;
-    const limit = parseInt(req.query.limit, 10);
 
-    const search = await Food.aggregate()
-      .search({
-        regex: {
-          query: `${query}.*`,
-          path: 'name',
-          allowAnalyzedField: true,
-        },
-      })
-      .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
-      .sort({ name_length: 1 })
-      .project({ name_length: 0 })
-      .limit(limit);
-    console.log(search);
+router.get(
+  '/search',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { query } = req.query;
+      const limit = parseInt(req.query.limit, 10);
 
-    // const search = await Food.find({
-    //   name: new RegExp(`^${query}`, 'i'),
+      const search = await Food.aggregate()
+        .search({
+          regex: {
+            query: `${query}.*`,
+            path: 'name',
+            allowAnalyzedField: true,
+          },
+        })
+        .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
+        .sort({ name_length: 1 })
+        .project({ name_length: 0 })
+        .limit(limit);
+      console.log(search);
 
-    // })
+      // const search = await Food.find({
+      //   name: new RegExp(`^${query}`, 'i'),
 
-    res.status(200).json(search);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-    console.log(err);
+      // })
+
+      res.status(200).json(search);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+      console.log(err);
+    }
   }
-});
+);
 module.exports = router;

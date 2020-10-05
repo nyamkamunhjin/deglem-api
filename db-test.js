@@ -1,7 +1,7 @@
 const User = require('./models/userSchema');
 const { Diary } = require('./models/diarySchema');
-const FoodLog = require('./models/foodLogSchema');
-const { SchemaTypes, Types } = require('mongoose');
+
+const { Types } = require('mongoose');
 const { formatDate } = require('./functions/functions');
 
 const testUser = new User({

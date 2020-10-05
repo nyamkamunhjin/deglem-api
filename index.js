@@ -5,13 +5,19 @@ const app = express();
 const bodyParser = require('body-parser');
 const foodsRouter = require('./routes/foods/api-foods');
 const usersRouter = require('./routes/users/api-users');
+const authRouter = require('./routes/auth/api-auth');
+const passport = require('passport');
 
 require('dotenv').config();
+require('./passport/passport-setup');
 
 app.use(bodyParser.json());
+app.use(passport.initialize());
 app.use(morgan('tiny'));
 app.use('/api/foods', foodsRouter);
 app.use('/api/users', usersRouter);
+app.use('/auth', authRouter);
+
 app.get('/', (req, res) => {
   res.json({ message: 'hello from deglem' });
 });
@@ -29,75 +35,3 @@ mongoose
     });
   })
   .catch((err) => console.log(err));
-
-const { testUser, testDiary } = require('./db-test');
-const User = require('./models/userSchema');
-const userSchema = require('./models/userSchema');
-const { Diary } = require('./models/diarySchema');
-// testUser.save()
-
-// save new diary link with user
-// testDiary.save((err, doc) => {
-//   // save diary id to user daily log
-//   if (err) console.log(err);
-//   else {
-//     console.log(doc.user_id);
-//     userSchema.findOneAndUpdate(
-//       { _id: doc.user_id },
-//       { $push: { dailyLog: doc._id } },
-//       { new: true },
-//       (err, doc) => {
-//         if (err) console.log(err);
-//         else {
-//           console.log('Document successful created and linked with user');
-//           console.log(doc);
-//         }
-//       }
-//     );
-//   }
-// });
-
-// // what is this
-// User.findByIdAndUpdate(
-//   { _id: '5f607f85a586e00e416f2124' },
-//   { $push: { dailyLog: testDiary } },
-//   { new: true },
-//   (err, doc) => {
-//     if (err) console.log('Error updating user dailylog');
-//     console.log(doc);
-//   }
-// );
-
-// // no idea
-// User.findByIdAndUpdate(
-//   { _id: '5f604a4277de91086fd50b63', 'dailyLog.id': 0 },
-//   { $push: { 'dailyLog.$.breakfast': {
-//     serving: 3,
-//     food: mongoose.Types.ObjectId('5f363641127c0f0f3799990a')
-//   } } },
-//   { new: true },
-//   (err, doc) => {
-//     if (err) console.log('Error updating user dailylog', err);
-//     console.log(doc);
-//   }
-// );
-
-// // find diary by id and add new food with serving
-// Diary.findOneAndUpdate(
-//   { _id: '5f60875bfa98a910d541160a' },
-//   {
-//     $push: {
-//       breakfast: {
-//         serving: 5,
-//         food: '5f6082d1467bac0f6bd69686',
-//       },
-//     },
-//   },
-//   { new: true, upsert: true },
-//   (err, doc) => {
-//     if(err) console.log(err)
-//     else {
-//       console.log('doc successfully updated')
-//     }
-//   }
-// );
