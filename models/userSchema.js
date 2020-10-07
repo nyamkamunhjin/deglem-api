@@ -27,12 +27,9 @@ const userSchema = new Schema({
       required: true,
     },
     gender: {
-      type: Schema.Types.Boolean,
-      required: true,
-    },
-    height: {
-      type: Schema.Types.Number,
-      required: true,
+      type: Schema.Types.String,
+      enum: ['male', 'female'],
+      default: 'male',
     },
     dateOfBirth: {
       type: Schema.Types.Date,
@@ -40,6 +37,10 @@ const userSchema = new Schema({
     },
   },
   goalInfo: {
+    height: {
+      type: Schema.Types.Number,
+      // required: true,
+    },
     currentWeight: {
       type: Schema.Types.Number,
       // required: true,

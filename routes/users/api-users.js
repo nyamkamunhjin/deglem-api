@@ -14,7 +14,6 @@ router.get(
   async (req, res) => {
     /*
   GET ALL DIARIES OF A USER
-
   */
     try {
       const { date } = req.query;
