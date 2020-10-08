@@ -6,6 +6,7 @@ const userSchema = new Schema({
     username: {
       type: Schema.Types.String,
       required: true,
+      unique: true,
     },
     password: {
       type: Schema.Types.String,
@@ -17,6 +18,7 @@ const userSchema = new Schema({
     email: {
       type: Schema.Types.String,
       required: true,
+      unique: true,
     },
     firstName: {
       type: Schema.Types.String,

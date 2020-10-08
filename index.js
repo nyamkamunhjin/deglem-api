@@ -28,7 +28,12 @@ app.get('/', (req, res) => {
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-bojs0.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
-    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+    }
   )
   .then(() => {
     console.log('Connected to Mongo Atlas');

@@ -17,12 +17,14 @@ router.post(
         creator: req.user._id,
       });
 
-      const err = await food.validate();
-      if (err) {
-        console.error(err);
+      const validationError = await food.validate();
+      if (validationError) {
+        console.error(validationError);
         throw new Error('food validation failed.');
       } else {
-        food.save();
+        const saveError = await food.save();
+        if (saveError) throw new Error('food is duplicate.');
+
         res
           .status(200)
           .json({ success: true, message: 'food added to database.' });

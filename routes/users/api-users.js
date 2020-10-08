@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const moment = require('moment');
 
 const passport = require('passport');
 const User = require('../../models/userSchema');

@@ -27,7 +27,10 @@ router.post(
       expiresIn: addedSeconds,
     });
 
-    return res.json({ token, expires: expiresIn.toISOString() });
+    return res.json({
+      token,
+      expires: expiresIn.toISOString(),
+    });
   }
 );
 
@@ -42,22 +45,22 @@ router.post('/register', async (req, res) => {
     userData.userInfo.password = hashedPassword;
 
     const user = new User(userData);
-    user.validate((err) => {
-      if (err) {
-        console.log(err);
-        return res
-          .status(500)
-          .json({ successful: false, message: err.message });
-      }
+    const validationError = await user.validate();
+    if (validationError) {
+      console.log(validationError);
+      throw new Error('User validation failed.');
+    } else {
+      const saveError = await user.save();
 
-      // console.log(user);
-      user.save();
+      if (saveError) throw new Error('User already exists.');
 
       return res.status(200).json({
         successful: true,
         message: 'Please confirm your email',
       });
-    });
+    }
+
+    // console.log(user);
   } catch (err) {
     console.log(err);
 

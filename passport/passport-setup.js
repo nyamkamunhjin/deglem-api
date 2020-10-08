@@ -8,7 +8,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(
   new LocalStrategy(
-    { usernameField: 'email', passwordField: 'password' },
+    { usernameField: 'email', passwordField: 'password', session: false },
     (email, password, done) => {
       User.findOne({ 'userInfo.email': email }, (err, user) => {
         if (err) {
@@ -19,7 +19,7 @@ passport.use(
           return done(null, false, { message: 'Incorrect username.' });
         }
 
-        // console.log(user);
+        console.log(user);
 
         bcrypt.compare(password, user.userInfo.password).then((res) => {
           if (res) return done(null, user);
