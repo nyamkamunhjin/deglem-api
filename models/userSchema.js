@@ -30,8 +30,8 @@ const userSchema = new Schema({
     },
     gender: {
       type: Schema.Types.String,
-      enum: ['male', 'female'],
-      default: 'male',
+      enum: ['Male', 'Female'],
+      default: 'Male',
     },
     dateOfBirth: {
       type: Schema.Types.Date,
