@@ -17,18 +17,21 @@ router.post(
         creator: req.user._id,
       });
 
-      const validationError = await food.validate();
-      if (validationError) {
-        console.error(validationError);
-        throw new Error('food validation failed.');
-      } else {
-        const saveError = await food.save();
-        if (saveError) throw new Error('food is duplicate.');
-
-        res
-          .status(200)
-          .json({ success: true, message: 'food added to database.' });
-      }
+      return food.validate((err) => {
+        if (err) {
+          console.log(err);
+          // throw err;
+        } else {
+          food.save((err) => {
+            if (err) throw new Error('food validation failed.');
+            else {
+              res
+                .status(200)
+                .json({ success: true, message: 'food added to database.' });
+            }
+          });
+        }
+      });
     } catch (err) {
       res.status(409).json({ success: false, message: err.message });
 
@@ -54,6 +57,10 @@ router.get(
   async (req, res) => {
     try {
       const { barcode } = req.query;
+
+      console.log(barcode);
+      if (!barcode) throw new Error('barcode required.');
+
       const food = await Food.findOne({ barcode }).exec();
       if (food === null) throw new Error('product not found');
       res.status(200).json(food);
@@ -71,6 +78,8 @@ router.put(
   async (req, res) => {
     try {
       const { barcode } = req.params;
+      console.log(barcode);
+      if (!barcode) throw new Error('barcode required.');
 
       const food = await Food.findOneAndUpdate({ barcode }, req.body, {
         new: true,

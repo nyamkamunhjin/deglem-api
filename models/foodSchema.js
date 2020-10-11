@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
 
 const foodSchema = new Schema({
   creator: {
@@ -13,7 +14,7 @@ const foodSchema = new Schema({
   name: {
     type: Schema.Types.String,
     required: true,
-    unique: true,
+    // unique: true,
   },
   serving: {
     size: {
@@ -94,5 +95,7 @@ const foodSchema = new Schema({
     type: Schema.Types.Number,
   },
 });
+
+foodSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('Food', foodSchema);

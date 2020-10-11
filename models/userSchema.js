@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const uniqueValidator = require('mongoose-unique-validator');
 const userSchema = new Schema({
   userInfo: {
     username: {
@@ -56,7 +56,9 @@ const userSchema = new Schema({
       // required: true,
     },
     activityLevel: {
-      type: Schema.Types.Number,
+      type: Schema.Types.String,
+      enum: ['Sedentary', 'Lightly Active', 'Active', 'Very Active'],
+      default: 'Sedentary',
       // required: true,
     },
     nutritionGoals: {
@@ -80,5 +82,7 @@ const userSchema = new Schema({
   },
   dailyLog: [{ type: Schema.Types.ObjectId, ref: 'Diary' }],
 });
+
+userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model('User', userSchema);
