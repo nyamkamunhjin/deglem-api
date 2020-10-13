@@ -61,23 +61,23 @@ const userSchema = new Schema({
       default: 'Sedentary',
       // required: true,
     },
-    nutritionGoals: {
-      calories: {
-        type: Schema.Types.Number,
-        // required: true,
-      },
-      carbohydrates: {
-        type: Schema.Types.Number,
-        // required: true,
-      },
-      protein: {
-        type: Schema.Types.Number,
-        // required: true,
-      },
-      fat: {
-        type: Schema.Types.Number,
-        // required: true,
-      },
+  },
+  nutritionGoals: {
+    calories: {
+      type: Schema.Types.Number,
+      // required: true,
+    },
+    carbohydrates: {
+      type: Schema.Types.Number,
+      // required: true,
+    },
+    protein: {
+      type: Schema.Types.Number,
+      // required: true,
+    },
+    fat: {
+      type: Schema.Types.Number,
+      // required: true,
     },
   },
   dailyLog: [{ type: Schema.Types.ObjectId, ref: 'Diary' }],
