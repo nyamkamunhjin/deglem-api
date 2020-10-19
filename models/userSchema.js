@@ -64,20 +64,200 @@ const userSchema = new Schema({
   },
   nutritionGoals: {
     calories: {
-      type: Schema.Types.Number,
+      value: {
+        type: Schema.Types.Number,
+        default: () => 2000,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'cal',
+      },
       // required: true,
     },
-    carbohydrates: {
-      type: Schema.Types.Number,
-      // required: true,
+    totalFat: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 61,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => '%',
+      },
+    },
+    saturatedFat: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 20,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    transFat: {
+      value: {
+        type: Schema.Types.Number,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    polyUnsaturatedFat: {
+      value: {
+        type: Schema.Types.Number,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    monoUnsaturatedFat: {
+      value: {
+        type: Schema.Types.Number,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    cholestrol: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 300,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'mg',
+      },
+    },
+    sodium: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 2300,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'mg',
+      },
+    },
+    totalCarbohydrates: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 40,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => '%',
+      },
+    },
+    dietaryFibers: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 30,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    sugars: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 30,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    addedSugars: {
+      value: {
+        type: Schema.Types.Number,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
+    },
+    sugarAlchohols: {
+      value: {
+        type: Schema.Types.Number,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'g',
+      },
     },
     protein: {
-      type: Schema.Types.Number,
-      // required: true,
+      value: {
+        type: Schema.Types.Number,
+        default: () => 20,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => '%',
+      },
     },
-    fat: {
-      type: Schema.Types.Number,
-      // required: true,
+    vitaminD: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 600,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'µg',
+      },
+    },
+    calcium: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 1000,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'mg',
+      },
+    },
+    iron: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 15,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'mg',
+      },
+    },
+    potassium: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 3500,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'mg',
+      },
+    },
+    vitaminA: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 900,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'µg',
+      },
+    },
+    vitaminC: {
+      value: {
+        type: Schema.Types.Number,
+        default: () => 75,
+      },
+      unit: {
+        type: Schema.Types.String,
+        default: () => 'mg',
+      },
     },
   },
   dailyLog: [{ type: Schema.Types.ObjectId, ref: 'Diary' }],

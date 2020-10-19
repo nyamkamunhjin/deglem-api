@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require('../models/userSchema');
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(
   new LocalStrategy(

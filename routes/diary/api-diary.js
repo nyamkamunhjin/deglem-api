@@ -14,6 +14,64 @@ router.get(
     try {
       const { date } = req.query;
       const { _id: user_id } = req.user;
+      // const range = parseInt(req.query.range, 10);
+      console.log(req.query);
+      // check if id is null
+      if (!user_id) throw new Error('id query is null');
+
+      const diaries = await Diary.find({
+        user_id,
+        date,
+      })
+        .populate({
+          path: 'breakfast',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
+        })
+        .populate({
+          path: 'lunch',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
+        })
+        .populate({
+          path: 'dinner',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
+        })
+        .populate({
+          path: 'snacks',
+          populate: {
+            path: 'food',
+            model: 'Food',
+          },
+        })
+        .exec();
+
+      if (diaries !== undefined) res.status(200).json(diaries);
+      // send error
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+      // throw err;
+    }
+  }
+);
+
+router.get(
+  '/batch',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    /*
+  GET ALL DIARIES OF A USER
+  */
+    try {
+      const { date } = req.query;
+      const { _id: user_id } = req.user;
       const range = parseInt(req.query.range, 10);
       console.log(req.query);
       // check if id is null

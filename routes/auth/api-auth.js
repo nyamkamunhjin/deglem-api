@@ -45,22 +45,20 @@ router.post('/register', async (req, res) => {
     userData.userInfo.password = hashedPassword;
 
     const user = new User(userData);
-    const validationError = await user.validate();
-    if (validationError) {
-      console.log(validationError);
-      throw new Error('User validation failed.');
-    } else {
-      const saveError = await user.save();
-
-      if (saveError) throw new Error('User already exists.');
-
-      return res.status(200).json({
-        successful: true,
-        message: 'Please confirm your email',
-      });
-    }
-
-    // console.log(user);
+    user.save((err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          successful: false,
+          message: 'Failed.',
+        });
+      } else {
+        return res.status(200).json({
+          successful: true,
+          message: 'Please confirm your email',
+        });
+      }
+    });
   } catch (err) {
     console.log(err);
 
