@@ -77,11 +77,11 @@ const userSchema = new Schema({
     totalFat: {
       value: {
         type: Schema.Types.Number,
-        default: () => 61,
+        default: () => 40,
       },
       unit: {
         type: Schema.Types.String,
-        default: () => '%',
+        default: () => 'g',
       },
     },
     saturatedFat: {
@@ -148,7 +148,7 @@ const userSchema = new Schema({
       },
       unit: {
         type: Schema.Types.String,
-        default: () => '%',
+        default: () => 'g',
       },
     },
     dietaryFibers: {
@@ -196,7 +196,7 @@ const userSchema = new Schema({
       },
       unit: {
         type: Schema.Types.String,
-        default: () => '%',
+        default: () => 'g',
       },
     },
     vitaminD: {
