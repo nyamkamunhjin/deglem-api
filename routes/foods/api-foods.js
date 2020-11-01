@@ -96,41 +96,6 @@ router.put(
 
 // searching foods
 
-// router.get(
-//   '/search',
-//   passport.authenticate('jwt', { session: false }),
-//   async (req, res) => {
-//     try {
-//       const { query } = req.query;
-//       const limit = parseInt(req.query.limit, 10);
-
-//       const search = await Food.aggregate()
-//         .search({
-//           regex: {
-//             query: `${query}.*`,
-//             path: 'name',
-//             allowAnalyzedField: true,
-//           },
-//         })
-//         .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
-//         .sort({ name_length: 1 })
-//         .project({ name_length: 0 })
-//         .limit(limit);
-//       console.log(search);
-
-//       // const search = await Food.find({
-//       //   name: new RegExp(`^${query}`, 'i'),
-
-//       // })
-
-//       res.status(200).json(search);
-//     } catch (err) {
-//       res.status(500).json({ message: err.message });
-//       console.log(err);
-//     }
-//   }
-// );
-
 router.get(
   '/search',
   passport.authenticate('jwt', { session: false }),
@@ -141,20 +106,22 @@ router.get(
 
       const search = await Food.aggregate()
         .search({
-          // regex: {
-          //   query: `${query}.*`,
-          //   path: 'name',
-          //   allowAnalyzedField: true,
-          // },
-          text: {
-            query: query,
+          regex: {
+            query: `${query}.*`,
             path: 'name',
+            allowAnalyzedField: true,
           },
         })
         .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
         .sort({ name_length: 1 })
         .project({ name_length: 0 })
         .limit(limit);
+      console.log(search);
+
+      // const search = await Food.find({
+      //   name: new RegExp(`^${query}`, 'i'),
+
+      // })
 
       res.status(200).json(search);
     } catch (err) {
@@ -163,4 +130,37 @@ router.get(
     }
   }
 );
+
+// router.get(
+//   '/search',
+//   passport.authenticate('jwt', { session: false }),
+//   async (req, res) => {
+//     try {
+//       const { query } = req.query;
+//       const limit = parseInt(req.query.limit, 10);
+
+//       const search = await Food.aggregate()
+//         .search({
+//           // regex: {
+//           //   query: `${query}.*`,
+//           //   path: 'name',
+//           //   allowAnalyzedField: true,
+//           // },
+//           text: {
+//             query: query,
+//             path: 'name',
+//           },
+//         })
+//         .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
+//         .sort({ name_length: 1 })
+//         .project({ name_length: 0 })
+//         .limit(limit);
+
+//       res.status(200).json(search);
+//     } catch (err) {
+//       res.status(500).json({ message: err.message });
+//       console.log(err);
+//     }
+//   }
+// );
 module.exports = router;
