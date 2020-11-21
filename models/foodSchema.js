@@ -7,6 +7,15 @@ const foodSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
   },
+  recipe: {
+    type: Schema.Types.Boolean,
+    required: false,
+    default: () => false,
+  },
+  recipeDescription: {
+    type: Schema.Types.String,
+  },
+  ingredients: [{ type: Schema.Types.ObjectId, ref: 'SingleFood' }],
   barcode: {
     type: Schema.Types.Number,
     unique: true,
