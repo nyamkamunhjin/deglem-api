@@ -7,6 +7,7 @@ const foodsRouter = require('./routes/foods/api-foods');
 const usersRouter = require('./routes/diary/api-diary');
 const authRouter = require('./routes/auth/api-auth');
 const userRouter = require('./routes/users/api-users');
+const statsRouter = require('./routes/stats/api-stats');
 const passport = require('passport');
 
 require('dotenv').config();
@@ -15,6 +16,7 @@ require('./passport/passport-setup');
 app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(morgan('tiny'));
+app.use('/api/stats', statsRouter);
 app.use('/api/foods', foodsRouter);
 app.use('/api/diary', usersRouter);
 app.use('/auth', authRouter);
