@@ -241,4 +241,68 @@ router.delete(
   }
 );
 
+// water endpoints
+
+// read
+router.get(
+  '/water',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { date } = req.query;
+      const { _id: user_id } = req.user;
+
+      console.log(req.query);
+      // check if id is null
+      if (!user_id) throw new Error('id query is null');
+
+      const diaries = await Diary.find({
+        user_id,
+        date,
+      });
+
+      res.status(200).json(diaries[0].water);
+      // console.log(diaries);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: err.message });
+    }
+  }
+);
+// update
+router.post(
+  '/water/add',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      Diary.findOneAndUpdate(
+        {
+          user_id: req.user._id,
+          date: req.body.date,
+        },
+        {
+          $set: {
+            water: req.body.water,
+          },
+        },
+        {
+          new: true,
+          upsert: true,
+        },
+        (err, doc) => {
+          if (err || !doc) console.log(err);
+          else {
+            console.log(doc);
+            res.status(200).json(doc.water);
+          }
+        }
+      );
+
+      // console.log(diaries);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: err.message });
+    }
+  }
+);
 module.exports = router;

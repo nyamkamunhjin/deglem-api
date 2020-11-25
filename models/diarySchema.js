@@ -37,7 +37,7 @@ const diarySchema = new Schema({
   lunch: [singleFoodTypeSchema],
   dinner: [singleFoodTypeSchema],
   snacks: [singleFoodTypeSchema],
-  water: Schema.Types.Number,
+  water: { type: Schema.Types.Number, default: () => 0 },
 });
 
 diarySchema.post('findOneAndUpdate', async (doc) => {
