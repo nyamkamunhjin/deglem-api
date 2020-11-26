@@ -131,6 +131,32 @@ router.get(
   }
 );
 
+router.get(
+  '/recipe/search',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    try {
+      const { query } = req.query;
+      const limit = parseInt(req.query.limit, 10);
+
+      const search = await Food.find({
+        name: new RegExp(`^${query}`, 'i'),
+        recipe: true,
+      }).limit(limit);
+      console.log(search);
+
+      // const search = await Food.find({
+      //   name: new RegExp(`^${query}`, 'i'),
+
+      // })
+
+      res.status(200).json(search);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+      console.log(err);
+    }
+  }
+);
 // router.get(
 //   '/search',
 //   passport.authenticate('jwt', { session: false }),
