@@ -66,49 +66,4 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// router.get(
-//   '/google',
-//   passport.authenticate('google', {
-//     scope: ['profile', 'email'],
-//   })
-// );
-
-// router.get(
-//   '/google/redirect',
-//   passport.authenticate('google', { session: false }),
-//   async (req, res) => {
-//     // return res.json({ token, userId: user.id, expires: expiresIn.toISOString });
-//     try {
-//       const user = req.user;
-//       console.log('redirect: ', user, user.username === '');
-
-//       if (user.username === '') {
-//         res.redirect(
-//           url.format({
-//             pathname: keys.url.front_end + '/register',
-//             query: user,
-//           })
-//         );
-//       } else {
-//         const user = {
-//           id: req.user.id,
-//           email: req.user.email,
-//         };
-//         // calc expire date
-//         let expiresIn = new Date();
-//         expiresIn.setSeconds(expiresIn.getSeconds() + addedSeconds);
-
-//         const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-//           expiresIn: addedSeconds,
-//         });
-
-//         return res.json({ token, expires: expiresIn.toISOString() });
-//       }
-//     } catch (err) {
-//       console.log(err);
-//       res.json({ successful: false });
-//     }
-//   }
-// );
-
 module.exports = router;
