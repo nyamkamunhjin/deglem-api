@@ -91,6 +91,7 @@ router.get(
       const limit = parseInt(req.query.limit, 10);
 
       const search = await Food.aggregate()
+
         .search({
           regex: {
             query: `${query}.*`,
@@ -125,10 +126,22 @@ router.get(
       const { query } = req.query;
       const limit = parseInt(req.query.limit, 10);
 
-      const search = await Food.find({
-        name: new RegExp(`^${query}`, 'i'),
-        recipe: true,
-      }).limit(limit);
+      const search = await Food.aggregate()
+
+        .search({
+          regex: {
+            query: `${query}.*`,
+            path: 'name',
+            allowAnalyzedField: true,
+          },
+        })
+        .match({
+          recipe: true,
+        })
+        .project({ document: '$$ROOT', name_length: { $strLenCP: '$name' } })
+        .sort({ name_length: 1 })
+        .project({ name_length: 0 })
+        .limit(limit);
       console.log(search);
 
       // const search = await Food.find({
