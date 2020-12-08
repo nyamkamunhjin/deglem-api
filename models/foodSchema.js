@@ -15,7 +15,12 @@ const foodSchema = new Schema({
   recipeDescription: {
     type: Schema.Types.String,
   },
-  ingredients: [{ type: Schema.Types.ObjectId, ref: 'SingleFood' }],
+  ingredients: [
+    {
+      food: { type: Schema.Types.ObjectId, ref: 'Food' },
+      serving: Schema.Types.Number,
+    },
+  ],
   barcode: {
     type: Schema.Types.Number,
     unique: true,

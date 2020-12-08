@@ -53,6 +53,7 @@ const userSchema = new Schema({
     },
     weeklyGoal: {
       type: Schema.Types.Number,
+      default: 0,
       // required: true,
     },
     activityLevel: {
