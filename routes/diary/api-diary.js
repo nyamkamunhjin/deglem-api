@@ -63,16 +63,17 @@ router.get(
 );
 
 router.get(
-  '/batch',
+  '/batch/',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     /*
   GET ALL DIARIES OF A USER
   */
     try {
-      const { date } = req.query;
+      const { startDate } = req.query;
+      const { endDate } = req.query;
       const { _id: user_id } = req.user;
-      const range = parseInt(req.query.range, 10);
+      // const range = parseInt(req.query.range, 10);
       console.log(req.query);
       // check if id is null
       if (!user_id) throw new Error('id query is null');
@@ -80,8 +81,8 @@ router.get(
       const diaries = await Diary.find({
         user_id,
         date: {
-          $gte: moment(new Date(date)).add(-range, 'days').format('YYYY-MM-DD'),
-          $lt: moment(new Date(date)).add(range, 'days').format('YYYY-MM-DD'),
+          $gte: startDate,
+          $lte: endDate,
         },
       })
         .populate({

@@ -1,7 +1,6 @@
 const router = require('express').Router();
 
 const passport = require('passport');
-const { Diary } = require('../../models/diarySchema');
 const statisticSchema = require('../../models/statisticSchema');
 
 router.get(
@@ -82,31 +81,6 @@ router.post(
   }
 );
 
-router.get(
-  '/diary',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    /*
-  GET ALL DIARIES OF A USER
-  */
-    try {
-      const { _id: user_id } = req.user;
-      // const range = parseInt(req.query.range, 10);
-
-      // check if id is null
-      if (!user_id) throw new Error('id query is null');
-
-      const diaries = await Diary.find({
-        user_id,
-      });
-
-      if (diaries !== undefined) res.status(200).json(diaries);
-      // send error
-    } catch (err) {
-      res.status(500).json({ success: false, message: err.message });
-      // throw err;
-    }
-  }
-);
+// get net average calorie intake
 
 module.exports = router;

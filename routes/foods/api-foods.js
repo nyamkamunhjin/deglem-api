@@ -144,10 +144,13 @@ router.get(
         .limit(limit);
       console.log(search);
 
-      // const search = await Food.find({
-      //   name: new RegExp(`^${query}`, 'i'),
+      console.log(search.map((each) => each.document.ingredients));
 
-      // })
+      // const ingredients = await Food.find({
+      //   _id: { $in: search.map((each) => each.document.ingredients.food) },
+      // });
+
+      // console.log(ingredients);
 
       res.status(200).json(search);
     } catch (err) {
